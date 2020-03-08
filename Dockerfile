@@ -1,14 +1,15 @@
 FROM sunnywalden/centos7-python3.7:latest
 
 # env
-ENV ENV_TYPE=prod
+ENV ENV_TYPE=prod \
+    EXTERNAL=false
 
-RUN mkdir -p /opt/application/healthcheck_exporter/
+RUN mkdir -p /opt/service_static/
 
 # add project to the image
-ADD . /opt/application/healthcheck_exporter/
+ADD . /opt/service_static/
 
-WORKDIR /opt/application/healthcheck_exporter/
+WORKDIR /opt/service_static/
 
 RUN mkdir -p ~/.pip/ && \
     echo "[global]" > ~/.pip/pip.conf && \
@@ -22,6 +23,6 @@ RUN mkdir -p ~/.pip/ && \
 
 
 # RUN server after docker is up
-ENTRYPOINT python main/send_metrics.py
+ENTRYPOINT python main/service_healthcheck.py
 
 EXPOSE 8000

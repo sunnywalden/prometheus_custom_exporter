@@ -9,7 +9,7 @@ from py_eureka_client import eureka_client
 BASE_DIR = os.path.abspath(os.path.join(os.getcwd(), ".."))
 sys.path.append(BASE_DIR)
 
-from utils.get_configure import apollo_envs_conf
+from utils.apollo_handler import ApolloQuery
 
 
 def get_client(eureka_hosts="127.0.0.1"):
@@ -22,7 +22,7 @@ def get_client(eureka_hosts="127.0.0.1"):
         return eureka_client
 
 
-def register_ops(eureka_server=None, instance_ip='127.0.0.1', instance_port='8000', app_name=None):
+def register_service(eureka_server=None, instance_ip='127.0.0.1', instance_port='8000', app_name=None):
     # The flowing code will register your server to eureka server and also start to send heartbeat every 30 seconds
     eureka_client.init_registry_client(
         eureka_server=eureka_server,
@@ -31,7 +31,7 @@ def register_ops(eureka_server=None, instance_ip='127.0.0.1', instance_port='800
         instance_ip=instance_ip)
 
 
-def unregister_ops():
+def unregister_service():
     eureka_client.stop()
 
 
@@ -74,8 +74,9 @@ def instance_info(instances):
 
 if __name__ == '__main__':
     eureka_ip = '127.0.0.1'
+    apollo_query = ApolloQuery()
     try:
-        eureka_ip = apollo_envs_conf("eureka_ip")
+        eureka_ip = apollo_query.apo_config("eureka_ip")
     except Exception as e:
         print("Connecting apollo failed!")
         exit(1)
